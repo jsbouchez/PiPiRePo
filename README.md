@@ -41,7 +41,7 @@ Please read the [Code of Conduct](https://github.com/jsbouchez/PiPiRePo.git/blob
 
 ## :warning: License
 
-Distributed under the no License. See LICENSE.txt for more information.
+Distributed under the MIT License. See LICENSE.txt for more information.
 
 ## :handshake: Contact
 
