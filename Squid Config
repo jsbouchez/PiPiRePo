@@ -1,0 +1,184 @@
+Step #1: Check the Current Port
+
+By default, Squid launches a session listening on port 3128.
+
+Running the command:
+
+netstat -plant
+
+Should show something similar to:
+
+Proto  Recv-Q  Send-Q  Local Address  Foreign Address  State  PID/Program name
+tcp6   0       0       :::3128        :::*             LISTEN 6261/(squid-1)
+
+Where :::3128 is the port on which Squid is listening.
+Step #2: Find the Configuration File
+
+Configuration file locations may vary. The config file should be called squid.conf. To find the config file use the following command:
+
+locate squid.conf
+
+You should receive a result similar to:
+
+/etc/squid/squid.conf
+Step #3: Configure a Single New Listening Port
+
+For a refresher on editing files with vim see: New User Tutorial: Overview of the Vim Text Editor
+
+Now, let’s edit the file found in the previous step:
+
+vim /etc/squid/squid.conf
+
+Look for a section of the configuration file similar to:
+
+# Squid normally listens to port 3128
+http_port 3128
+
+Changing the port number is as easy as changing the number 3128. For example: to use port 1337 simply edit the file to include:
+
+http_port 1337
+
+Exit and save the file, and then restart Squid:
+
+systemctl restart squid
+
+Now running the command:
+
+netstat -plant
+
+Should show something similar to:
+
+Proto  Recv-Q  Send-Q  Local Address  Foreign Address  State  PID/Program name
+tcp6   0       0       :::1337        :::*             LISTEN 6261/(squid-1)
+
+Where :::1337 is the port on which Squid is listening.
+
+-------------------------------------------------------------------------------
+
+You can change the Squid log format to add date and time by editing the Squid configuration file, typically named squid.conf. Here's how:
+
+Disclaimer: Modifying configuration files can affect your system's stability. It's recommended to back up the configuration file before making any changes.
+
+Locate the squid.conf file.  The usual location is /etc/squid/ on most Linux distributions.
+
+Edit the squid.conf file using a text editor with root privileges (e.g., sudo nano /etc/squid/squid.conf).
+
+Look for the line that defines the log format for your desired log file (e.g., access log or cache log). This line typically starts with access_log or cache_log followed by the file path and a format code.
+
+Find the format code within the line. The default format code might not include date and time.
+
+Update the format code to include the desired date and time format. Here are some options:
+
+%tl: This displays the timestamp in local time.
+%tg: This displays the timestamp in GMT.
+
+For a more detailed format like ISO 8601 with milliseconds, you can use %{%FT%T}tl.
+
+Here's an example:
+
+Suppose your current access_log line looks like this:
+access_log /var/log/squid/access.log squid %<st %ru %un %ph %ul %ug %mt %referer
+
+To add the date and time in local time using %tl, you can update the line to:
+access_log /var/log/squid/access.log squid %tl %<st %ru %un %ph %ul %ug %mt %referer
+
+Save the changes to the squid.conf file.
+
+Restart the Squid service for the new log format to take effect. The specific command to restart Squid might vary depending on your Linux distribution. Here are some common examples:
+
+Ubuntu/Debian: sudo systemctl restart squid
+RedHat/CentOS: sudo service squid restart
+Now your Squid logs will include the date and time in the specified format.
+
+----------------------------------------------------------------------------
+## Mandar ACL Rules a un archivo externo
+
+Squid allows you to store Access Control List (ACL) parameters in an external file. This can help keep your squid.conf file cleaner and easier to manage. Here's how to do it:
+
+Create the External File:
+
+Choose a location for your external ACL file. A common location is within the Squid configuration directory (e.g., /etc/squid/).
+Create a new text file using a text editor.
+Define your ACL rules within this file, one rule per line.
+Define ACLs in the External File:
+
+The format for each ACL rule will depend on the specific ACL type you're defining. Here are some common examples:
+
+acl_name src all - This defines an ACL named "acl_name" that matches all source IP addresses.
+acl_localnet src 192.168.1.0/24 - This defines an ACL named "acl_localnet" that matches source IP addresses within the subnet 192.168.1.0/24.
+acl_websites dstdomain example.com - This defines an ACL named "websites" that matches requests going to the domain "example.com".
+Reference the External File in squid.conf:
+
+Open your squid.conf file (usually located in /etc/squid/).
+Locate the line where you want to use the ACL. It might be within an http_access rule or an acl definition.
+Instead of defining the ACL parameters directly in squid.conf, replace them with the path to your external ACL file enclosed in double quotes.
+Here's an example:
+
+Original squid.conf line:
+
+http_access deny acl local_websites
+Updated line referencing the external file:
+
+http_access deny acl "/etc/squid/acl_list.txt"
+Note: Replace /etc/squid/acl_list.txt with the actual path to your external ACL file.
+
+Save the Changes and Restart Squid:
+
+Save the changes to both squid.conf and your external ACL file.
+
+Restart the Squid service for the changes to take effect. The specific command might vary depending on your Linux distribution (e.g., sudo systemctl restart squid on Ubuntu/Debian).
+
+By following these steps, you can manage your Squid ACL rules in a separate file, keeping your squid.conf cleaner and easier to maintain.
+
+---------------------------------------------------------------------------------
+
+## ADDING ROUTES
+
+adding routes to squid proxy
+
+Squid itself doesn't directly manage routing tables.  However, depending on your desired outcome, there might be a few approaches to achieve a proxy-like behavior:
+
+Transparent Proxy with Firewall Rules (Linux):
+
+This method utilizes firewall rules to redirect traffic to the Squid proxy port (usually 3128) for specific networks or hosts.
+
+Here's a general idea (consult your specific firewall documentation for exact commands):
+
+iptables rule:
+
+iptables -t nat -A PREROUTING -p tcp -i <interface> -d 0.0.0.0/0 -m state --state NEW -j DNAT --to-destination <Squid_IP>:3128
+
+Replace <interface> with the network interface where traffic originates (e.g., eth0).
+
+Replace <Squid_IP> with the IP address of your Squid server.
+
+This rule intercepts outgoing traffic (tcp) on the specified interface and redirects it to the Squid server on port 3128.
+
+Note: This approach requires administrative access to modify firewall rules and might not be suitable for all environments.
+
+Client-Side Proxy Configuration:
+
+This approach involves manually configuring client devices (computers, phones) to use the Squid server as their proxy.
+
+The specific steps will vary depending on the operating system, but generally involve:
+
+Accessing network settings.
+Locating the proxy configuration options.
+Enabling the "Use a proxy server" option.
+Specifying the Squid server's IP address and port (usually 3128).
+This method offers more granular control over which devices use the proxy.
+
+Squid Configuration with tcp_outgoing_address (Advanced):
+
+In some situations, you can configure Squid to specify an outgoing IP address for its own traffic.
+
+tcp_outgoing_address option:
+
+This option within squid.conf allows you to define the IP address Squid uses for its outbound connections.
+Use Case:
+
+This might be helpful if your Squid server resides on a separate network and needs to access the internet through a specific gateway.
+Caution:
+
+Modifying this option can affect how Squid interacts with the internet and requires careful consideration. It's recommended for advanced users only.
+Remember, the best approach depends on your specific network configuration and desired outcome.  For more complex scenarios, consider consulting your network administrator or referring to detailed Squid documentation.
