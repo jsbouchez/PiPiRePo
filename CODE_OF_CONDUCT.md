@@ -1,4 +1,7 @@
-## Code of Conduct
+# Code of Conduct (H1)
+## This is a level 2 heading (H2)
+### This is a level 3 heading (H3)
+
 
 This project is intended to be a welcoming and inclusive space for everyone. We value respectful interactions and contributions from all participants.
 
