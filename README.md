@@ -1,6 +1,7 @@
 <div align='center'>
 
 <img src=https://drive.google.com/file/d/1VwmAme0oP-hLdEkrqabI3pdOb2touaN6/view?usp=drive_link alt="logo" width= height= />
+<img src=https://drive.google.com/file/d/1VwmAme0oP-hLdEkrqabI3pdOb2touaN6/view?usp=sharing>
 
 <h1>Personal Linux Utils Repo</h1>
 <p>Bash, Tmux, sVIM, Podman & other data, tools and config parameters to use on the go</p>
