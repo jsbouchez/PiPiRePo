@@ -37,7 +37,7 @@ see `contributing.md` for ways to get started
 
 ### :scroll: Code of Conduct
 
-Please read the [Code of Conduct](https://github.com/jsbouchez/PiPiRePo.git/blob/master/CODE_OF_CONDUCT.md)
+Please read the [Code of Conduct](https://github.com/jsbouchez/PiPiRePo.git/tree/main/CODE_OF_CONDUCT.md)
 
 ## :warning: License
 
