@@ -1,13 +1,9 @@
 <div align='center'>
 
-[comment]: <> <img src=https://drive.google.com/file/d/1VwmAme0oP-hLdEkrqabI3pdOb2touaN6/view?usp=drive_link alt="logo" width= height= />
-[comment]: <> <img src=https://drive.google.com/file/d/1VwmAme0oP-hLdEkrqabI3pdOb2touaN6/view?usp=sharing>
-
 <h1>Personal Linux Utils Repo</h1>
 <p>Bash, Tmux, sVIM, Podman & other data, tools and config parameters to use on the go</p>
 
 <h4> <span> · </span> <a href="https://github.com/jsbouchez/PiPiRePo/blob/master/README.md"> Documentation </a> <span> · </span> <a href="https://github.com/jsbouchez/PiPiRePo/issues"> Report Bug </a> <span> · </span> <a href="https://github.com/jsbouchez/PiPiRePo/issues"> Request Feature </a> </h4>
-
 
 </div>
 
