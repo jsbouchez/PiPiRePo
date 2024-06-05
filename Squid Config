@@ -1,27 +1,31 @@
-Step #1: Check the Current Port
+# SQUID CONFIG
 
-By default, Squid launches a session listening on port 3128.
+## Step #1: CTPEGASUSP heck the Current Port
 
-Running the command:
+*By default, Squid launches a session listening on port 3128.*
+
+__Running the command:__
 
 netstat -plant
 
-Should show something similar to:
+**Should show something similar to:**
 
 Proto  Recv-Q  Send-Q  Local Address  Foreign Address  State  PID/Program name
-tcp6   0       0       :::3128        :::*             LISTEN 6261/(squid-1)
+tcp6   0       0       :::3128        ::: *             LISTEN 6261/(squid-1)
 
 Where :::3128 is the port on which Squid is listening.
-Step #2: Find the Configuration File
 
-Configuration file locations may vary. The config file should be called squid.conf. To find the config file use the following command:
+## Step #2: Find the Configuration File
+
+__Configuration file locations may vary. The config file should be called squid.conf. To find the config file use the following command:__
 
 locate squid.conf
 
-You should receive a result similar to:
+*You should receive a result similar to:*
 
 /etc/squid/squid.conf
-Step #3: Configure a Single New Listening Port
+
+## Step #3: Configure a Single New Listening Port
 
 For a refresher on editing files with vim see: New User Tutorial: Overview of the Vim Text Editor
 
@@ -30,15 +34,14 @@ Now, let’s edit the file found in the previous step:
 vim /etc/squid/squid.conf
 
 Look for a section of the configuration file similar to:
-
-# Squid normally listens to port 3128
+__Squid normally listens to port 3128__
 http_port 3128
 
 Changing the port number is as easy as changing the number 3128. For example: to use port 1337 simply edit the file to include:
 
 http_port 1337
 
-Exit and save the file, and then restart Squid:
+*Exit and save the file, and then restart Squid:*
 
 systemctl restart squid
 
@@ -46,35 +49,36 @@ Now running the command:
 
 netstat -plant
 
-Should show something similar to:
+*Should show something similar to:*
 
 Proto  Recv-Q  Send-Q  Local Address  Foreign Address  State  PID/Program name
-tcp6   0       0       :::1337        :::*             LISTEN 6261/(squid-1)
+tcp6   0       0       :::1337        ::: *             LISTEN 6261/(squid-1)
 
 Where :::1337 is the port on which Squid is listening.
 
--------------------------------------------------------------------------------
+---
+## Tips
 
 You can change the Squid log format to add date and time by editing the Squid configuration file, typically named squid.conf. Here's how:
 
-Disclaimer: Modifying configuration files can affect your system's stability. It's recommended to back up the configuration file before making any changes.
+a. Disclaimer: Modifying configuration files can affect your system's stability. It's recommended to back up the configuration file before making any changes.
 
-Locate the squid.conf file.  The usual location is /etc/squid/ on most Linux distributions.
+b. Locate the squid.conf file.  The usual location is /etc/squid/ on most Linux distributions.
 
-Edit the squid.conf file using a text editor with root privileges (e.g., sudo nano /etc/squid/squid.conf).
+c. Edit the squid.conf file using a text editor with root privileges (e.g., sudo nano /etc/squid/squid.conf).
 
-Look for the line that defines the log format for your desired log file (e.g., access log or cache log). This line typically starts with access_log or cache_log followed by the file path and a format code.
+d. Look for the line that defines the log format for your desired log file (e.g., access log or cache log). This line typically starts with access_log or cache_log followed by the file path and a format code.
 
-Find the format code within the line. The default format code might not include date and time.
+e. Find the format code within the line. The default format code might not include date and time.
 
-Update the format code to include the desired date and time format. Here are some options:
+f. Update the format code to include the desired date and time format. Here are some options:
 
 %tl: This displays the timestamp in local time.
 %tg: This displays the timestamp in GMT.
 
 For a more detailed format like ISO 8601 with milliseconds, you can use %{%FT%T}tl.
 
-Here's an example:
+*Here's an example:*
 
 Suppose your current access_log line looks like this:
 access_log /var/log/squid/access.log squid %<st %ru %un %ph %ul %ug %mt %referer
@@ -90,7 +94,8 @@ Ubuntu/Debian: sudo systemctl restart squid
 RedHat/CentOS: sudo service squid restart
 Now your Squid logs will include the date and time in the specified format.
 
-----------------------------------------------------------------------------
+----
+
 ## Mandar ACL Rules a un archivo externo
 
 Squid allows you to store Access Control List (ACL) parameters in an external file. This can help keep your squid.conf file cleaner and easier to manage. Here's how to do it:
@@ -146,11 +151,11 @@ Here's a general idea (consult your specific firewall documentation for exact co
 
 iptables rule:
 
-iptables -t nat -A PREROUTING -p tcp -i <interface> -d 0.0.0.0/0 -m state --state NEW -j DNAT --to-destination <Squid_IP>:3128
+iptables -t nat -A PREROUTING -p tcp -i \<interface\> -d 0.0.0.0/0 -m state --state NEW -j DNAT --to-destination \<Squid_IP\>:3128
 
-Replace <interface> with the network interface where traffic originates (e.g., eth0).
+Replace \<interface\> with the network interface where traffic originates (e.g., eth0).
 
-Replace <Squid_IP> with the IP address of your Squid server.
+Replace \<Squid_IP\> with the IP address of your Squid server.
 
 This rule intercepts outgoing traffic (tcp) on the specified interface and redirects it to the Squid server on port 3128.
 
