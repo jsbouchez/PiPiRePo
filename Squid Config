@@ -135,7 +135,7 @@ Restart the Squid service for the changes to take effect. The specific command m
 
 By following these steps, you can manage your Squid ACL rules in a separate file, keeping your squid.conf cleaner and easier to maintain.
 
----------------------------------------------------------------------------------
+---
 
 ## ADDING ROUTES
 
